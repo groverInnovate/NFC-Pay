@@ -2,79 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@layer base {
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    color: white;
+    background-color: #050508;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(77,124,255,0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(181,60,255,0.15) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(0,255,136,0.1) 0px, transparent 50%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Smooth scroll but native feel */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Hide scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+  }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-}
+@layer components {
+  .glass-card {
+    @apply bg-brand-card backdrop-blur-xl border border-brand-border rounded-2xl shadow-xl shadow-black/50 overflow-hidden relative;
+    /* Soft top highlight */
+    box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.15), 0 10px 30px rgba(0,0,0,0.5);
+  }
 
-body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-}
+  .glass-button {
+    @apply relative w-full overflow-hidden rounded-xl py-4 font-semibold text-white shadow-lg transition-all duration-300;
+  }
 
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-}
+  .glass-button::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    z-index: 1;
+  }
 
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
+  .glass-button:hover::before {
+    opacity: 1;
+  }
+  
+  .glass-button:active {
+    transform: scale(0.98);
+  }
 
-.button {
-  width: 100%;
-  padding: 16px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+  .glass-button > * {
+    position: relative;
+    z-index: 2;
+  }
 
-.button-primary {
-  background: #0052ff;
-  color: white;
-}
+  .glass-button.blue {
+    @apply bg-gradient-to-r from-neon-blue to-blue-700 shadow-neon-blue/30;
+  }
+  
+  .glass-button.purple {
+    @apply bg-gradient-to-r from-neon-purple to-purple-800 shadow-neon-purple/30;
+  }
 
-.button-primary:hover:not(:disabled) {
-  background: #0041cc;
-  transform: translateY(-1px);
+  .glass-input {
+    @apply w-full bg-black/20 border border-brand-border rounded-xl px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-blue/50 focus:border-transparent transition-all backdrop-blur-sm;
+  }
 }
-
-.button-primary:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.input {
-  width: 100%;
-  padding: 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 16px;
-  transition: border-color 0.2s;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #0052ff;
-}
-
-.input:read-only {
-  background-color: #f9fafb;
-  color: #6b7280;
-}
-

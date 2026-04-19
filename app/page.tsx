@@ -3,49 +3,61 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Users, Nfc, CreditCard, Shield } from 'lucide-react';
+import { signInWithGoogle } from '@/lib/googleAuth';
 
 export default function LandingPage() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const router = useRouter();
 
   const handleGoogleSignIn = async () => {
-    setIsSigningIn(true);
-    // Simulate Google OAuth flow - your teammate will implement actual auth
-    setTimeout(() => {
-      setIsSigningIn(false);
+    try {
+      setIsSigningIn(true);
+      await signInWithGoogle();
       router.push('/home');
-    }, 2000);
+    } catch (error) {
+      console.error('Sign in failed:', error);
+      setIsSigningIn(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
+    <div className="min-h-screen flex items-center justify-center p-4 relative w-full overflow-hidden">
+      {/* Background Orbs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-neon-blue/20 blur-[120px] mix-blend-screen animate-pulse-glow" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute bottom-[10%] -right-[10%] w-[60%] h-[60%] rounded-full bg-neon-purple/20 blur-[120px] mix-blend-screen animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
+      </div>
+
+      <div className="max-w-md w-full glass-card p-10 animate-fade-in relative z-10 before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:-z-10 border-t border-l border-white/20">
+        
         {/* App Logo & Title */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Nfc className="w-10 h-10 text-blue-600" />
+        <div className="text-center mb-10 animate-float">
+          <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 flex items-center justify-center mx-auto mb-6 backdrop-blur-md border border-white/10 shadow-[0_0_30px_rgba(77,124,255,0.3)]">
+            <Nfc className="w-12 h-12 text-neon-blue drop-shadow-[0_0_15px_rgba(77,124,255,0.8)]" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">PayNFC</h1>
-          <p className="text-gray-600">Instant payments with NFC & contacts</p>
+          <h1 className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-white to-neon-purple mb-3 tracking-tight">PayNFC</h1>
+          <p className="text-gray-400 font-medium text-sm tracking-wide">Next-Gen Instant Crypto Payments</p>
         </div>
 
         {/* Features Preview */}
-        <div className="space-y-4 mb-8">
-          <div className="flex items-center space-x-3">
-            <Users className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-gray-700">Pay your Google contacts instantly</span>
+        <div className="space-y-5 mb-10">
+          <div className="flex items-center space-x-4 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+            <div className="p-2 rounded-lg bg-neon-blue/10">
+              <Users className="w-5 h-5 text-neon-blue" />
+            </div>
+            <span className="text-sm font-medium text-gray-200">Pay your Google contacts instantly</span>
           </div>
-          <div className="flex items-center space-x-3">
-            <Nfc className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-gray-700">Tap NFC cards for quick payments</span>
+          <div className="flex items-center space-x-4 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+            <div className="p-2 rounded-lg bg-neon-purple/10">
+              <Nfc className="w-5 h-5 text-neon-purple" />
+            </div>
+            <span className="text-sm font-medium text-gray-200">Tap NFC cards for quick payments</span>
           </div>
-          <div className="flex items-center space-x-3">
-            <Shield className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-gray-700">Secure Face ID authentication</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <CreditCard className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-gray-700">Track transaction history & score</span>
+          <div className="flex items-center space-x-4 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+            <div className="p-2 rounded-lg bg-neon-green/10">
+              <CreditCard className="w-5 h-5 text-neon-green" />
+            </div>
+            <span className="text-sm font-medium text-gray-200">Decentralized Smart Wallets via Base</span>
           </div>
         </div>
 
@@ -53,16 +65,16 @@ export default function LandingPage() {
         <button
           onClick={handleGoogleSignIn}
           disabled={isSigningIn}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3 disabled:opacity-50"
+          className="glass-button blue flex items-center justify-center space-x-3 disabled:opacity-50 group hover:shadow-[0_0_30px_rgba(77,124,255,0.4)]"
         >
           {isSigningIn ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              <span>Signing in...</span>
+              <span>Connecting Identity...</span>
             </>
           ) : (
             <>
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -73,8 +85,8 @@ export default function LandingPage() {
           )}
         </button>
 
-        <p className="text-xs text-gray-500 text-center mt-4">
-          By continuing, you agree to our Terms of Service and Privacy Policy
+        <p className="text-[11px] text-gray-500 text-center mt-6 uppercase tracking-widest font-medium">
+          Secured by Base OnchainKit
         </p>
       </div>
     </div>
